@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void add(View view) {
+        if(finalPrice == 0) return;
         if(prices.size()>5){
             prices.remove(0);
         }
