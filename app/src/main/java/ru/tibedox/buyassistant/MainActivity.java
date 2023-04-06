@@ -110,9 +110,15 @@ public class MainActivity extends AppCompatActivity {
             s = editDiscount.getText() == null ? "0" : editDiscount.getText().toString();
             discount = s.equals("") ? 0 : Float.parseFloat(s);
 
-            if(weight > 0.001) {
+            if(weight > 0.0001) {
                 try {
                     finalPrice = (float) (Math.ceil(price / weight * 1000 * (100 - discount))/100);
+                } catch (Exception e) {
+                    finalPrice = 0;
+                }
+            } else if(discount > 0.0001) {
+                try {
+                    finalPrice = (float) (Math.ceil(price * (100 - discount))/100);
                 } catch (Exception e) {
                     finalPrice = 0;
                 }
