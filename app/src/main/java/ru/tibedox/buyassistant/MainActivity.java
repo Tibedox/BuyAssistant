@@ -61,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void add(View view) {
         if(finalPrice == 0) return;
-        if(prices.size()>5){
-            prices.remove(0);
+        if(prices.size()>33){
+            prices.remove(prices.size()-1);
         }
-        prices.add(round(price)+": "+round(finalPrice));
+        prices.add(0, round(price)+": "+round(finalPrice));
         pricesToString();
         textPrices.setText(strPrices);
     }
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
                     finalPrice = 0;
                 }
             } else finalPrice = 0;
-            textFinalPrice.setText("ЦЕНА: "+round(finalPrice)+" р/кг");
+            textFinalPrice.setText("цена: "+round(finalPrice)+" р/кг");
         }
 
         @Override
