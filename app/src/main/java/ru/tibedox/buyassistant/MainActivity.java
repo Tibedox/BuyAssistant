@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         if(prices.size()>33){
             prices.remove(prices.size()-1);
         }
-        prices.add(0, round(price)+": "+round(finalPrice));
+        prices.add(0, round(price)+"р: "+round(finalPrice)+"р/кг");
         pricesToString();
         textPrices.setText(strPrices);
     }
@@ -99,12 +99,6 @@ public class MainActivity extends AppCompatActivity {
     private String round(float x) {
         if(x-(int)x > 0) return Float.toString(x);
         return Integer.toString((int)x);
-    }
-
-    private void clear(View view) {
-        editPrice.setText("");
-        editWeight.setText("");
-        editDiscount.setText("");
     }
 
     private void calculate() {
@@ -131,5 +125,16 @@ public class MainActivity extends AppCompatActivity {
             }
         } else finalPrice = 0;
         textFinalPrice.setText(round(finalPrice));
+    }
+
+    public void clear(View view) {
+        editPrice.setText("");
+        editWeight.setText("");
+        editDiscount.setText("");
+    }
+
+    public void clearList(View view) {
+        prices.clear();
+        textPrices.setText("");
     }
 }
