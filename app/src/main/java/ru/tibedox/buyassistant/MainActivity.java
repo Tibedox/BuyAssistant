@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -55,8 +57,26 @@ public class MainActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.showSoftInput(editPrice, InputMethodManager.SHOW_IMPLICIT);
 
-        MyTimer timer = new MyTimer(Long.MAX_VALUE, 500);
-        timer.start();
+        TextWatcher watcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                calculate();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        };
+
+        editPrice.addTextChangedListener(watcher);
+        editWeight.addTextChangedListener(watcher);
+        editDiscount.addTextChangedListener(watcher);
     }
 
     public void add(View view) {
@@ -81,54 +101,35 @@ public class MainActivity extends AppCompatActivity {
         return Integer.toString((int)x);
     }
 
-    public void clear(View view) {
+    private void clear(View view) {
         editPrice.setText("");
         editWeight.setText("");
         editDiscount.setText("");
     }
 
-    class MyTimer extends CountDownTimer {
-        /**
-         * @param millisInFuture    The number of millis in the future from the call
-         *                          to {@link #start()} until the countdown is done and {@link #onFinish()}
-         *                          is called.
-         * @param countDownInterval The interval along the way to receive
-         *                          {@link #onTick(long)} callbacks.
-         */
-        public MyTimer(long millisInFuture, long countDownInterval) {
-            super(millisInFuture, countDownInterval);
-        }
+    private void calculate() {
+        String s = editPrice.getText() == null ? "0" : editPrice.getText().toString();
+        price = s.equals("") ? 0 : Float.parseFloat(s);
 
-        @Override
-        public void onTick(long millisUntilFinished) {
-            String s = editPrice.getText() == null ? "0" : editPrice.getText().toString();
-            price = s.equals("") ? 0 : Float.parseFloat(s);
+        s = editWeight.getText() == null ? "0" : editWeight.getText().toString();
+        weight = s.equals("") ? 0 : Float.parseFloat(s);
 
-            s = editWeight.getText() == null ? "0" : editWeight.getText().toString();
-            weight = s.equals("") ? 0 : Float.parseFloat(s);
+        s = editDiscount.getText() == null ? "0" : editDiscount.getText().toString();
+        discount = s.equals("") ? 0 : Float.parseFloat(s);
 
-            s = editDiscount.getText() == null ? "0" : editDiscount.getText().toString();
-            discount = s.equals("") ? 0 : Float.parseFloat(s);
-
-            if(weight > 0.0001) {
-                try {
-                    finalPrice = (float) (Math.ceil(price / weight * 1000 * (100 - discount))/100);
-                } catch (Exception e) {
-                    finalPrice = 0;
-                }
-            } else if(discount > 0.0001) {
-                try {
-                    finalPrice = (float) (Math.ceil(price * (100 - discount))/100);
-                } catch (Exception e) {
-                    finalPrice = 0;
-                }
-            } else finalPrice = 0;
-            textFinalPrice.setText("цена: "+round(finalPrice)+" р/кг");
-        }
-
-        @Override
-        public void onFinish() {
-
-        }
+        if(weight > 0.0001) {
+            try {
+                finalPrice = (float) (Math.ceil(price / weight * 1000 * (100 - discount))/100);
+            } catch (Exception e) {
+                finalPrice = 0;
+            }
+        } else if(discount > 0.0001) {
+            try {
+                finalPrice = (float) (Math.ceil(price * (100 - discount))/100);
+            } catch (Exception e) {
+                finalPrice = 0;
+            }
+        } else finalPrice = 0;
+        textFinalPrice.setText(round(finalPrice));
     }
 }
